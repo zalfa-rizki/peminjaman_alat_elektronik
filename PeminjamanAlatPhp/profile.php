@@ -1,0 +1,115 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kaze - Profile</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.profile-page{margin:15px 1.7% 30px;border:3px solid #000;border-radius:22px;min-height:650px;padding:32px;background:#fff;position:relative}
+.profile-top{display:flex;align-items:center;gap:40px}
+.profile-avatar{width:200px;height:200px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:145px;line-height:1}
+.profile-main-name{font-size:64px;font-weight:700;line-height:1.05}
+.profile-main-id{font-size:46px;margin-top:8px}
+.edit-profile{position:absolute;top:32px;right:32px;height:68px;padding:0 34px;background:#fff;border:3px solid #000;border-radius:40px;font-size:28px;font-weight:700}
+.edit-profile:hover{background:#000;color:#fff}
+.profile-details{margin:110px 35px 0;font-size:40px;line-height:1.55}
+.profile-details div{margin-bottom:2px}
+.profile-label{font-weight:400}
+.profile-value{font-weight:400}
+.profile-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.profile-modal-backdrop.show{display:flex}
+.profile-modal{width:min(560px,100%);background:#fff;color:#000;border:3px solid #000;border-radius:22px;padding:25px}
+.profile-modal h2{font-size:32px;margin-bottom:20px}
+.profile-field{margin-bottom:15px}
+.profile-field label{display:block;font-size:20px;margin-bottom:6px}
+.profile-field input{width:100%;height:54px;border:3px solid #000;border-radius:14px;padding:0 14px;font-size:20px}
+.profile-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.profile-modal-actions button{padding:12px 22px;border:2px solid #000;border-radius:30px;background:#fff;font-weight:700}
+.profile-modal-actions .save{background:#000;color:#fff}
+@media(max-width:650px){
+ .profile-page{margin:10px;min-height:600px;padding:18px;border-radius:16px}
+ .profile-top{gap:18px;align-items:center}
+ .profile-avatar{width:105px;height:105px;font-size:76px}
+ .profile-main-name{font-size:34px}.profile-main-id{font-size:26px}
+ .edit-profile{top:18px;right:18px;height:48px;padding:0 16px;font-size:18px}
+ .profile-details{margin:85px 5px 0;font-size:21px;line-height:1.6;overflow-wrap:anywhere}
+}
+body.dark-mode .profile-page,body.dark-mode .edit-profile{background:#111;color:#fff;border-color:#fff}
+body.dark-mode .edit-profile:hover{background:#fff;color:#000}
+body.dark-mode .profile-modal{background:#111;color:#fff;border-color:#fff}
+body.dark-mode .profile-field input,body.dark-mode .profile-modal-actions button{background:#111;color:#fff;border-color:#fff}
+body.dark-mode .profile-modal-actions .save{background:#fff;color:#000}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="profile" onclick="go('profile.php')" role="button" tabindex="0">
+    <div class="logo">K</div>
+    <div><div class="name" id="headerName">Kaze</div><div class="user-id" id="headerId">061108</div></div>
+  </div>
+  <button class="back" onclick="go('dashboard.php')">Back</button>
+</header>
+
+<main class="profile-page">
+  <button class="edit-profile" onclick="openEdit()">Edit Profile</button>
+  <section class="profile-top">
+    <div class="profile-avatar">K</div>
+    <div>
+      <div class="profile-main-name" id="profileName">Kaze</div>
+      <div class="profile-main-id" id="profileId">061108</div>
+    </div>
+  </section>
+  <section class="profile-details">
+    <div><span class="profile-label">Username : </span><span class="profile-value" id="detailName">Kaze</span></div>
+    <div><span class="profile-label">Your ID : </span><span class="profile-value" id="detailId">061108</span></div>
+    <div><span class="profile-label">Email : </span><span class="profile-value" id="detailEmail">kaze061108@gmail.com</span></div>
+  </section>
+</main>
+
+<div class="profile-modal-backdrop" id="editBackdrop" onclick="closeEdit(event)">
+  <div class="profile-modal" onclick="event.stopPropagation()">
+    <h2>Edit Profile</h2>
+    <div class="profile-field"><label for="editName">Username</label><input id="editName" maxlength="30"></div>
+    <div class="profile-field"><label for="editEmail">Email</label><input id="editEmail" type="email"></div>
+    <div class="profile-modal-actions"><button onclick="closeEdit()">Cancel</button><button class="save" onclick="saveProfile()">Save</button></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+function renderProfile(){
+  const p=getProfile();
+  document.getElementById('headerName').textContent=p.name;
+  document.getElementById('headerId').textContent=p.id;
+  document.getElementById('profileName').textContent=p.name;
+  document.getElementById('profileId').textContent=p.id;
+  document.getElementById('detailName').textContent=p.name;
+  document.getElementById('detailId').textContent=p.id;
+  document.getElementById('detailEmail').textContent=p.email;
+}
+function openEdit(){
+  const p=getProfile();
+  document.getElementById('editName').value=p.name;
+  document.getElementById('editEmail').value=p.email;
+  document.getElementById('editBackdrop').classList.add('show');
+}
+function closeEdit(e){
+  if(!e || e.target.id==='editBackdrop') document.getElementById('editBackdrop').classList.remove('show');
+}
+function saveProfile(){
+  const name=document.getElementById('editName').value.trim();
+  const email=document.getElementById('editEmail').value.trim();
+  if(!name || !email){alert('Username dan email wajib diisi.');return;}
+  const u=getUser()||{};
+  saveUser({...u,name,email,id:u.id||'061108'});
+  renderProfile();
+  closeEdit();
+  alert('Profil berhasil diperbarui.');
+}
+applyTheme();
+renderProfile();
+</script>
+</body>
+</html>

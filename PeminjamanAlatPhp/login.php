@@ -1,0 +1,38 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kaze - Login</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+body{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.wrap{width:min(1400px,94vw);display:grid;grid-template-columns:48% 52%;gap:35px;align-items:center}
+.brand{height:780px;background:#000;color:#fff;border-radius:20px;padding:32px;position:relative;overflow:hidden}
+.brand h1{font-size:38px;margin-bottom:5px}.brand h2{font-size:38px}
+.shapes span{position:absolute;border:7px solid #fff}.circle{width:125px;height:125px;border-radius:50%;left:35px;top:185px}.sq1{width:105px;height:105px;border-radius:16px;left:250px;top:230px}.sq2{width:170px;height:170px;border-radius:25px;right:65px;top:330px}.tri{width:120px;height:120px;left:80px;top:360px;clip-path:polygon(50% 0,100% 100%,0 100%);border:none!important;background:#fff}.tri:after{content:"";position:absolute;inset:8px;background:#000;clip-path:inherit}.x1,.x2{width:90px;height:90px;transform:rotate(45deg);border:7px solid #fff!important;clip-path:polygon(30% 0,70% 0,70% 30%,100% 30%,100% 70%,70% 70%,70% 100%,30% 100%,30% 70%,0 70%,0 30%,30% 30%);background:#000}.x1{right:55px;top:155px}.x2{left:40px;bottom:130px}.smalltri{width:65px;height:65px;right:45px;bottom:115px;border:none!important;background:#fff;clip-path:polygon(50% 0,100% 100%,0 100%)}.smalltri:after{content:"";position:absolute;inset:6px;background:#000;clip-path:inherit}
+.brand p{position:absolute;bottom:35px;left:35px;right:30px;font-size:31px;line-height:1.15}
+.form{padding:10px}.form h1{font-size:58px;margin-bottom:25px}.field{margin-bottom:25px}.field label{display:block;font-size:32px;margin-bottom:7px}.field input{width:100%;height:76px;border:2px solid #222;border-radius:18px;padding:0 18px;font-size:28px}.divider{height:8px;border-top:3px solid #000;border-bottom:3px solid #000;margin:28px 0}
+.submit{width:100%;height:78px;border:0;border-radius:18px;background:#000;color:#fff;font-size:30px;font-weight:700}.switch{display:flex;justify-content:space-between;align-items:center;font-size:22px;margin-top:25px}.switch button{padding:14px 20px;background:#fff;border:2px solid #000;border-radius:35px}
+@media(max-width:850px){.wrap{grid-template-columns:1fr}.brand{display:none}.form{padding:5px}.form h1{font-size:38px}.field label{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="brand"><h1>KAZE</h1><h2>electronic equipment rental</h2><div class="shapes"><span class="circle"></span><span class="sq1"></span><span class="sq2"></span><span class="x1"></span><span class="x2"></span><span class="smalltri"></span><span class="tri"></span></div><p>Borrow the electronic devices<br>you need to fulfill your needs.</p></section>
+<section class="form">
+<h1>Welcome back.</h1>
+<form onsubmit="login(event)">
+<div class="field"><label>Your Email</label><input id="email" type="email" placeholder="Email" required></div>
+<div class="field"><label>Your Email Password</label><input id="password" type="password" placeholder="Password" required></div>
+<div class="divider"></div><button class="submit">LOGIN</button>
+</form>
+<div class="switch"><span>Don't have an account yet?</span><button onclick="go('register.php')">Create a new account</button></div>
+</section></div>
+<script src="js/app.js"></script>
+<script>
+function login(e){e.preventDefault();const email=document.getElementById("email").value;const pass=document.getElementById("password").value;const u=getUser();if(u&&u.email===email&&u.password===pass){go("dashboard.php")}else if(!u){alert("Belum ada akun. Silakan register terlebih dahulu.")}else{alert("Email atau password salah.")}}
+</script>
+</body>
+</html>
